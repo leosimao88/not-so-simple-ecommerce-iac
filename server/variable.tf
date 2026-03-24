@@ -53,6 +53,6 @@ variable "vpc_resources" {
     })
 
     default = {
-      vpc = "nsse-production-vpc"
+      vpc = "nsse-vpc"
     }
 }
