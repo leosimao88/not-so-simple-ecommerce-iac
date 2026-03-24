@@ -134,9 +134,9 @@ variable "control_plane_auto_scaling_group" {
 
   default = {
     name                      = "nsse-production-control-plane-asg"
-    max_size                  = 2
-    min_size                  = 2
-    desired_capacity          = 2
+    max_size                  = 1
+    min_size                  = 1
+    desired_capacity          = 1
     health_check_grace_period = 180
     health_check_type         = "EC2"
     instance_tags = {
@@ -170,9 +170,9 @@ variable "worker_auto_scaling_group" {
   default = {
     name                            = "nsse-production-worker-asg"
     cluster_auto_scaler_policy_name = "nsse-production-cluster-autoscaler-policy"
-    max_size                        = 5
-    min_size                        = 4
-    desired_capacity                = 4
+    max_size                        = 1
+    min_size                        = 1
+    desired_capacity                = 1
     health_check_grace_period       = 180
     health_check_type               = "EC2"
     instance_tags = {
