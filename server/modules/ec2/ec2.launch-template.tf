@@ -7,6 +7,7 @@ resource "aws_launch_template" "this" {
   image_id                = var.launch_template.image_id
   instance_initiated_shutdown_behavior = var.launch_template.instance_initiated_shutdown_behavior
   vpc_security_group_ids = var.launch_template.vpc_security_group_ids
+  user_data              = var.launch_template.user_data
 
   block_device_mappings {
     device_name = "/dev/sdf"
