@@ -1,13 +1,13 @@
 data "aws_ami" "this" {
-  most_recent      = true
-  owners           = ["136693071363"]
+  most_recent = true
+  owners      = ["136693071363"]
 
   filter {
     name   = "name"
     values = ["debian-*"]
   }
 
- filter {
+  filter {
     name   = "architecture"
     values = ["x86_64"]
   }

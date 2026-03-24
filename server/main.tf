@@ -7,10 +7,10 @@ terraform {
   }
 
   backend "s3" {
-    bucket      = "nsse-terraform-state-files-lsa"
-    key         = "server/terraform.tfstate"
-    region      = "us-east-1"
-    profile     = "Leonardo"
+    bucket         = "nsse-terraform-state-files-lsa"
+    key            = "server/terraform.tfstate"
+    region         = "us-east-1"
+    profile        = "Leonardo"
     dynamodb_table = "nsse-terraform-state-locking-lsa"
   }
 }

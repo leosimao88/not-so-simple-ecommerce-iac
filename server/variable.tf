@@ -2,6 +2,16 @@ variable "region" {
   default = "us-east-1"
 }
 
+variable "vpc_resources" {
+  type = object({
+    vpc = string
+  })
+
+  default = {
+    vpc = "nsse-vpc"
+  }
+}
+
 variable "assume_role" {
   type = object({
     role_arn    = string,
@@ -30,31 +40,21 @@ variable "tags" {
 
 variable "ec2_resources" {
   type = object({
-    key_pair_name                = string,
-    instance_profile             = string,
-    instance_role                = string,
-    ssh_security_group           = string,
-    ssh_source_ip                = string
+    key_pair_name      = string,
+    instance_profile   = string,
+    instance_role      = string,
+    ssh_security_group = string,
+    ssh_source_ip      = string
 
   })
 
   default = {
-    key_pair_name                = "nsse-production-key-pair"
-    instance_role                = "nsse-production-instance-role"
-    instance_profile             = "nsse-production-instance-profile"
-    ssh_security_group           = "allow-ssh"
-    ssh_source_ip                = "0.0.0.0/0"
+    key_pair_name      = "nsse-production-key-pair"
+    instance_role      = "nsse-production-instance-role"
+    instance_profile   = "nsse-production-instance-profile"
+    ssh_security_group = "allow-ssh"
+    ssh_source_ip      = "0.0.0.0/0"
   }
-}
-
-variable "vpc_resources" {
-    type = object({
-      vpc = string
-    })
-
-    default = {
-      vpc = "nsse-vpc"
-    }
 }
 
 variable "control_plane_launch_template" {
@@ -75,9 +75,37 @@ variable "control_plane_launch_template" {
     name                                 = "nsse-production-debian-control-plane-lt"
     disable_api_stop                     = false
     disable_api_termination              = false
-    instance_type                        = "t3.medium"
+    instance_type                        = "t3.micro"
     instance_initiated_shutdown_behavior = "terminate"
     user_data                            = "./cli/control-plane-user-data.sh"
+    ebs = {
+      size                  = 20
+      delete_on_termination = true
+    }
+  }
+}
+
+variable "worker_launch_template" {
+  type = object({
+    name                                 = string
+    disable_api_stop                     = bool
+    disable_api_termination              = bool
+    instance_type                        = string
+    instance_initiated_shutdown_behavior = string
+    user_data                            = string
+    ebs = object({
+      size                  = number
+      delete_on_termination = bool
+    })
+  })
+
+  default = {
+    name                                 = "nsse-production-debian-worker-lt"
+    disable_api_stop                     = false
+    disable_api_termination              = false
+    instance_type                        = "t3.micro"
+    instance_initiated_shutdown_behavior = "terminate"
+    user_data                            = "./cli/worker-user-data.sh"
     ebs = {
       size                  = 20
       delete_on_termination = true
@@ -103,14 +131,48 @@ variable "control_plane_auto_scaling_group" {
   })
 
   default = {
-    name                      = "nsse-production-control-plane-asg"
+    name                      = "nsse-production-worker-asg"
     max_size                  = 1
     min_size                  = 1
     desired_capacity          = 1
     health_check_grace_period = 180
     health_check_type         = "EC2"
     instance_tags = {
-      Name = "nsse-production-control-plane"
+      Name = "nsse-production-worker"
+    }
+    instance_maintenance_policy = {
+      min_healthy_percentage = 100
+      max_healthy_percentage = 110
+    }
+  }
+}
+
+variable "worker_auto_scaling_group" {
+  type = object({
+    name                      = string
+    max_size                  = number
+    min_size                  = number
+    desired_capacity          = number
+    health_check_grace_period = number
+    health_check_type         = string
+    instance_tags = object({
+      Name = string
+    })
+    instance_maintenance_policy = object({
+      min_healthy_percentage = number
+      max_healthy_percentage = number
+    })
+  })
+
+  default = {
+    name                      = "nsse-production-worker-asg"
+    max_size                  = 1
+    min_size                  = 1
+    desired_capacity          = 1
+    health_check_grace_period = 180
+    health_check_type         = "EC2"
+    instance_tags = {
+      Name = "nsse-production-worker"
     }
     instance_maintenance_policy = {
       min_healthy_percentage = 100
