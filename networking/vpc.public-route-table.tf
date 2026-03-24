@@ -6,7 +6,7 @@ resource "aws_route_table" "public" {
     gateway_id = aws_internet_gateway.this.id
   }
 
-  tags = { Name = "${var.vpc.name}-${var.vpc.public_route_table_name}" }
+  tags = { Name = "${var.vpc_resources.name}-${var.vpc_resources.public_route_table_name}" }
 }
 
 resource "aws_route_table_association" "public" {

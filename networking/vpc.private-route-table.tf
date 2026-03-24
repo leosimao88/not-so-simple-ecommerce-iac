@@ -1,5 +1,5 @@
 resource "aws_route_table" "private" {
-  count = length(var.vpc.private_subnets)
+  count = length(var.vpc_resources.private_subnets)
   
   vpc_id = aws_vpc.this.id
 
@@ -8,7 +8,7 @@ resource "aws_route_table" "private" {
     gateway_id = aws_nat_gateway.this[count.index].id
   }
 
-  tags = { Name = "${var.vpc.name}-${var.vpc.private_route_table_name}-${aws_subnet.private[count.index].availability_zone}" }
+  tags = { Name = "${var.vpc_resources.name}-${var.vpc_resources.private_route_table_name}-${aws_subnet.private[count.index].availability_zone}" }
 }
 
 resource "aws_route_table_association" "private" {

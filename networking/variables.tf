@@ -28,7 +28,7 @@ variable "tags" {
   }
 }
 
-variable "vpc" {
+variable "vpc_resources" {
   type = object({
     name                      = string
     cidr_block                = string
