@@ -84,3 +84,37 @@ variable "control_plane_launch_template" {
     }
   }
 }
+
+variable "control_plane_auto_scaling_group" {
+  type = object({
+    name                      = string
+    max_size                  = number
+    min_size                  = number
+    desired_capacity          = number
+    health_check_grace_period = number
+    health_check_type         = string
+    instance_tags = object({
+      Name = string
+    })
+    instance_maintenance_policy = object({
+      min_healthy_percentage = number
+      max_healthy_percentage = number
+    })
+  })
+
+  default = {
+    name                      = "nsse-production-control-plane-asg"
+    max_size                  = 1
+    min_size                  = 1
+    desired_capacity          = 1
+    health_check_grace_period = 180
+    health_check_type         = "EC2"
+    instance_tags = {
+      Name = "nsse-production-control-plane"
+    }
+    instance_maintenance_policy = {
+      min_healthy_percentage = 100
+      max_healthy_percentage = 110
+    }
+  }
+}
