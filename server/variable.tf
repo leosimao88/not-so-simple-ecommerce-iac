@@ -131,7 +131,7 @@ variable "control_plane_auto_scaling_group" {
   })
 
   default = {
-    name                      = "nsse-production-worker-asg"
+    name                      = "nsse-production-control-plane-asg"
     max_size                  = 1
     min_size                  = 1
     desired_capacity          = 1
