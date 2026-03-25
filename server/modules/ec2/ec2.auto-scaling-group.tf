@@ -8,16 +8,14 @@ resource "aws_autoscaling_group" "this" {
   vpc_zone_identifier       = var.auto_scaling_group.vpc_zone_identifier
 
   launch_template {
-    name  = aws_launch_template.this.name
+    name    = aws_launch_template.this.name
     version = "$Latest"
- }
-
+  }
 
   instance_maintenance_policy {
     min_healthy_percentage = var.auto_scaling_group.instance_maintenance_policy.min_healthy_percentage
     max_healthy_percentage = var.auto_scaling_group.instance_maintenance_policy.max_healthy_percentage
   }
-
 
   tag {
     key                 = "Name"
@@ -28,6 +26,12 @@ resource "aws_autoscaling_group" "this" {
   tag {
     key                 = "Environment"
     value               = var.tags.Environment
+    propagate_at_launch = false
+  }
+
+  tag {
+    key                 = "Patch Group"
+    value               = "Production"
     propagate_at_launch = false
   }
 }

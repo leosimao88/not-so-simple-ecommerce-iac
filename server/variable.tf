@@ -33,9 +33,9 @@ variable "assume_role" {
   })
 
   default = {
+    role_arn    = "arn:aws:iam::322095785990:role/terraform-role"
+    external_id = "4440d132-b017-4f40-a6c6-0f69b7119c31"
     profile     = "Leonardo"
-    role_arn    = "<YOUR_ROLE_ARN>"
-    external_id = "<YOUR_EXTERNAL_ID>"
   }
 }
 
@@ -183,4 +183,25 @@ variable "worker_auto_scaling_group" {
       max_healthy_percentage = 110
     }
   }
+}
+
+variable "debian_patch_baseline" {
+  type = object({
+  name             = string
+  description      = string
+  approved_patches_enable_non_security = bool
+  operating_system = string
+  })
+  
+  default = {
+    name             = "DebianProductionPatchBaseline"
+    description      = "Custom Pathch Baseline for Debian 12"
+    approved_patches_enable_non_security = false
+    operating_system = "DEBIAN"
+  }
+}
+
+variable "patch_group" {
+  type = string
+  default = "Production" 
 }

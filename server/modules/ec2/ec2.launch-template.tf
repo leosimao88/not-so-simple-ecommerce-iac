@@ -19,7 +19,6 @@ resource "aws_launch_template" "this" {
   }
 
   iam_instance_profile {
-  #name = aws_iam_instance_profile.instance_profile.name
   name = var.instance_profile_name
   }
 
