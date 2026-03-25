@@ -17,21 +17,13 @@ resource "aws_autoscaling_group" "this" {
     max_healthy_percentage = var.auto_scaling_group.instance_maintenance_policy.max_healthy_percentage
   }
 
-  tag {
-    key                 = "Name"
-    value               = var.auto_scaling_group.name
-    propagate_at_launch = true
-  }
+  dynamic "tag" {
+    for_each = var.auto_scaling_group.instance_tags
 
-  tag {
-    key                 = "Environment"
-    value               = var.tags.Environment
-    propagate_at_launch = false
-  }
-
-  tag {
-    key                 = "Patch Group"
-    value               = "Production"
-    propagate_at_launch = false
+    content {
+      key                 = tag.key
+      value               = tag.value
+      propagate_at_launch = true
+    }
   }
 }

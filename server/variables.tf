@@ -77,7 +77,7 @@ variable "control_plane_launch_template" {
     name                                 = "nsse-production-debian-control-plane-lt"
     disable_api_stop                     = true
     disable_api_termination              = true
-    instance_type                        = "t3.medium"
+    instance_type                        = "t3.micro"
     instance_initiated_shutdown_behavior = "terminate"
     user_data                            = "./cli/control-plane-user-data.sh"
     ebs = {
@@ -123,7 +123,7 @@ variable "control_plane_auto_scaling_group" {
     desired_capacity          = number
     health_check_grace_period = number
     health_check_type         = string
-    instance_tags = object({
+    instance_tags             = object({
       Name = string
     })
     instance_maintenance_policy = object({
@@ -158,7 +158,7 @@ variable "worker_auto_scaling_group" {
     health_check_grace_period       = number
     health_check_type               = string
     cluster_auto_scaler_policy_name = string
-    instance_tags = object({
+    instance_tags                   = object({
       Name = string
     })
     instance_maintenance_policy = object({
@@ -187,21 +187,106 @@ variable "worker_auto_scaling_group" {
 
 variable "debian_patch_baseline" {
   type = object({
-  name             = string
-  description      = string
-  approved_patches_enable_non_security = bool
-  operating_system = string
+    name                                 = string
+    description                          = string
+    approved_patches_enable_non_security = bool
+    operating_system                     = string
+    approval_rules = list(object({
+      approve_after_days = number
+      compliance_level   = string
+      patch_filters = list(object({
+        product  = list(string)
+        section  = list(string)
+        priority = list(string)
+      }))
+    }))
   })
-  
+
   default = {
-    name             = "DebianProductionPatchBaseline"
-    description      = "Custom Pathch Baseline for Debian 12"
+    name                                 = "DebianProductionPatchBaseline"
+    description                          = "Custom Pathch Baseline for Debian 12"
     approved_patches_enable_non_security = false
-    operating_system = "DEBIAN"
+    operating_system                     = "DEBIAN"
+    approval_rules = [
+      {
+        approve_after_days = 0
+        compliance_level   = "CRITICAL"
+        patch_filters = [
+          {
+            product  = ["Debian12"]
+            section  = ["*"]
+            priority = ["Required", "Important"]
+          }
+        ]
+      },
+      {
+        approve_after_days = 0
+        compliance_level   = "INFORMATIONAL"
+        patch_filters = [
+          {
+            product  = ["Debian12"]
+            section  = ["*"]
+            priority = ["Standard"]
+          }
+        ]
+      }
+    ]
   }
 }
+
 
 variable "patch_group" {
   type = string
   default = "Production" 
+}
+
+variable "debian_production_association" {
+  type                   = object({
+    name                 = string
+    schedule_expression  = string
+    association_name     = string
+    max_concurrency      = number
+    max_errors           = number
+    output_location       = object({
+      s3_key_prefix  = string
+    })
+    parameters           = object({
+      Operation          = string
+      RebootOption       = string
+    })
+    targets              = object({
+      key                = string
+    })
+  })
+  default = {
+    name                = "AWS-RunPatchBaseline"
+    schedule_expression = "cron(*/30 * * * ? *)"
+    association_name    = "AWS-RunPatchBaseline"
+    max_concurrency     = 1
+    max_errors          = 0
+    output_location = {
+      s3_key_prefix = "patching-logs"
+    }
+    
+    parameters          = {
+      Operation         = "Install"
+      RebootOption      = "RebootIfNeeded"
+    }
+    
+    targets             = {
+      key               = "tag:PatchGroup"
+    }
+  }
+}
+
+variable "logs_bucket" {
+  type = object({
+    bucket = string
+    force_destroy = bool
+  })
+
+  default = {
+    bucket = "nsse-production-logs-lsa"
+    force_destroy = true
+  }
 }
