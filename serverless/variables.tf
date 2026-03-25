@@ -115,3 +115,8 @@ variable "order_confirmed_topic" {
     subscriptions                    = ["InvoiceQueue", "ProductStockQueue"]
   }
 }
+
+variable "s3_application_bucket_name" {
+  type    = string
+  default = "nsse-application-bucket-lsa"
+}
