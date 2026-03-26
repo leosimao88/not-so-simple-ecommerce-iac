@@ -51,7 +51,7 @@ variable "vpc_resources" {
     }))
   })
   default = {
-    name                     = "nsse-vpc"
+    name                     = "nsse-production-vpc"
     cidr_block               = "10.0.0.0/24"
     internet_gateway_name    = "internet-gateway"
     nat_gateway_name         = "nat-gateway"
