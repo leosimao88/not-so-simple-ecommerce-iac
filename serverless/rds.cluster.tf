@@ -8,7 +8,7 @@ resource "aws_rds_cluster" "this" {
   availability_zones            = var.rds_aurora_cluster.availability_zones
   storage_encrypted             = var.rds_aurora_cluster.storage_encrypted
   db_subnet_group_name          = aws_db_subnet_group.this.name
-  skip_final_snapshot           = var.db_subnet_group.skip_final_snapshot
+  skip_final_snapshot           = true
   deletion_protection           = var.rds_aurora_cluster.deletion_protection
   preferred_maintenance_window  = var.rds_aurora_cluster.preferred_maintenance_window
   vpc_security_group_ids        = [aws_security_group.postgresql.id]
