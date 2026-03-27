@@ -371,3 +371,23 @@ variable "document_db_cluster" {
     }
   }
 }
+
+variable "event_bridge_scheduler_lambda_report_job" {
+  type = object({
+    schedule_name                 = string
+    schedule_group_name           = string
+    schedule_flexible_time_window = string
+    schedule_expression           = string
+    role_name                     = string
+    policy_name                   = string
+  })
+
+  default = {
+    schedule_name                 = "lambda-report-schedule"
+    schedule_group_name           = "default"
+    schedule_flexible_time_window = "OFF"
+    schedule_expression           = "rate(1 minutes)"
+    role_name                     = "nsse-production-eb-scheduler-role"
+    policy_name                   = "nsse-production-invoke-lambda-policy"
+  }
+}
