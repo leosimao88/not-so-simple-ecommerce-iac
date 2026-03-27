@@ -1,0 +1,12 @@
+
+plugin: amazon.aws.aws_ec2
+profile: Leonardo
+regions:
+  - us-east-1
+groups:
+  control_planes: "'nsse-production-control-plane' in tags.Name"
+  workers: "'nsse-production-worker' in tags.Name"
+hostnames:
+  - instance-id
+filters:
+  instance-state-name: running

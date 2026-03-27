@@ -134,9 +134,9 @@ variable "control_plane_auto_scaling_group" {
 
   default = {
     name                      = "nsse-production-control-plane-asg"
-    max_size                  = 1
+    max_size                  = 5
     min_size                  = 1
-    desired_capacity          = 1
+    desired_capacity          = 3
     health_check_grace_period = 180
     health_check_type         = "EC2"
     instance_tags = {
@@ -170,9 +170,9 @@ variable "worker_auto_scaling_group" {
   default = {
     name                            = "nsse-production-worker-asg"
     cluster_auto_scaler_policy_name = "nsse-production-cluster-autoscaler-policy"
-    max_size                        = 1
+    max_size                        = 5
     min_size                        = 1
-    desired_capacity                = 1
+    desired_capacity                = 3
     health_check_grace_period       = 180
     health_check_type               = "EC2"
     instance_tags = {
@@ -289,4 +289,9 @@ variable "logs_bucket" {
     bucket = "nsse-production-logs-lsa"
     force_destroy = true
   }
+}
+
+variable "bucket_ssm" {
+  type = string
+  default = "nsse-ecommerce-ansible-ssm-lsa"
 }
