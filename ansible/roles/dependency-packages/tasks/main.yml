@@ -1,0 +1,10 @@
+---
+- name: Installing Dependency Packages
+  apt:
+    name: 
+      - apt-transport-https
+      - ca-certificates 
+      - curl 
+      - gpg
+      - software-properties-common
+    update_cache: true
