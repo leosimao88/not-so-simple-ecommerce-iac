@@ -172,7 +172,7 @@ variable "worker_auto_scaling_group" {
     cluster_auto_scaler_policy_name = "nsse-production-cluster-autoscaler-policy"
     max_size                        = 5
     min_size                        = 1
-    desired_capacity                = 3
+    desired_capacity                = 2
     health_check_grace_period       = 180
     health_check_type               = "EC2"
     instance_tags = {
