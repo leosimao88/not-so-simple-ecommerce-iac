@@ -1,0 +1,9 @@
+---
+- name: Reset previous kubeadm state
+  shell: kubeadm reset -f
+  ignore_errors: true
+
+- name: Join Control Planes
+  vars:
+    join_control_plane: "{{ lookup('file', '/tmp/kubeadm-join-control-plane.txt') }}"
+  shell: "{{ join_control_plane }}"
