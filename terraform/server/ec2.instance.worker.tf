@@ -1,4 +1,4 @@
-module "ec2_worker_instances" {
+module "ec2_workers_instances" {
   source                = "./modules/ec2"
   instance_profile_name = aws_iam_instance_profile.instance_profile.name
   launch_template = {
@@ -24,13 +24,18 @@ module "ec2_worker_instances" {
     health_check_grace_period = var.worker_auto_scaling_group.health_check_grace_period
     health_check_type         = var.worker_auto_scaling_group.health_check_type
     vpc_zone_identifier       = data.aws_subnets.private_subnets.ids
-    target_group_arns = []
+    target_group_arns         = []
     instance_tags = merge(
       { PatchGroup = var.patch_group },
+      {
+        "k8s.io/cluster-autoscaler/enabled" = true,
+        "k8s.io/cluster-autoscaler/devops-na-nuvem-cluster" = "owned",
+        "aws-node-termination-handler/managed" = true,
+        "kubernetes.io/cluster/devops-na-nuvem-cluster" = "owned"
+      },
       var.tags,
       var.worker_auto_scaling_group.instance_tags
     )
-
     instance_maintenance_policy = {
       min_healthy_percentage = var.worker_auto_scaling_group.instance_maintenance_policy.min_healthy_percentage
       max_healthy_percentage = var.worker_auto_scaling_group.instance_maintenance_policy.max_healthy_percentage

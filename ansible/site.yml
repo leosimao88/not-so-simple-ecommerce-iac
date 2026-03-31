@@ -1,8 +1,9 @@
 ---
-- name: Creating Kube Adm Kubernetes Cluster
+- name: Setting Up Cluster
   hosts: aws_ec2
   become: true
   roles:
+    - hostnames
     - dependency-packages
     - kube-packages
     - container-runtime
@@ -15,6 +16,7 @@
   roles:
     - init-cluster
     - container-network
+    - cluster-autoscaler
 
 - name: Join Control Planes
   hosts: control_planes:!control_planes[0]
@@ -23,3 +25,32 @@
     KUBECONFIG: "{{kube_config}}"
   roles:
     - join-control-planes
+
+- name: Join Workers
+  hosts: workers
+  become: true
+  environment:
+    KUBECONFIG: "{{kube_config_worker}}"
+  roles:
+    - join-workers
+
+# - name: Update Launch Template
+#   hosts: localhost
+#   roles:
+#     - update-launch-template
+
+# - name: Setting Up Cluster Components
+#   hosts: control_planes[0]
+#   become: true
+#   environment:
+#     KUBECONFIG: "{{kube_config}}"
+#   roles:
+#     - helm
+#     - cloud-controller
+#     - node-termination  
+#     - cluster-autoscaler
+#     - argocd
+#     - metrics-server
+#     - external-dns
+#     - load-balancer-controller
+#     - container-storage
