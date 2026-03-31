@@ -4,6 +4,6 @@ output "key_pair_private_key" {
 }
 
 output "nlb_dns_name" {
-  value = aws_lb.nlb_control_plane.dns_name
+  value = aws_lb.control_plane_nlb.dns_name
 }
 
