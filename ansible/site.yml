@@ -6,3 +6,4 @@
     - dependency-packages
     - kube-packages
     - container-runtime
+    - kubeadm-init-first-master

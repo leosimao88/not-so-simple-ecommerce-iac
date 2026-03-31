@@ -39,3 +39,6 @@ override.tf.json
 terraform.rc
 
 # End of https://www.toptal.com/developers/gitignore/api/terraform
+
+# Ansible credentials
+ansible/group_vars/all.yml
