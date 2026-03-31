@@ -234,7 +234,6 @@ variable "debian_patch_baseline" {
   }
 }
 
-
 variable "patch_group" {
   type = string
   default = "Production" 
@@ -294,4 +293,38 @@ variable "logs_bucket" {
 variable "bucket_ssm" {
   type = string
   default = "nsse-ecommerce-ansible-ssm-lsa"
+}
+
+variable "network_load_balancer" {
+  type = object({
+    name               = string
+    internal           = bool
+    load_balancer_type = string
+    default_tg         = object({
+      name             = string
+      target_type      = string
+      port             = number
+      protocol         = string
+    })
+    default_listener = object({
+      port              = number
+      protocol          = string
+    })
+  })
+
+  default = {
+    name               = "nsse-production-control-plane-nlb"
+    internal           = true
+    load_balancer_type = "network"
+    default_tg         = {
+      name             = "nsse-production-control-plane-tg"
+      target_type      = "instance"
+      port             = 6443
+      protocol         = "TCP"
+    }
+    default_listener = {
+      port              = 6443
+      protocol          = "TCP"
+    }
+  }
 }
