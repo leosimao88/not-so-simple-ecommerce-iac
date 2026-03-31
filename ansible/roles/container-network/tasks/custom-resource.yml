@@ -1,0 +1,12 @@
+---
+- name: Downloading Calico CRD
+  shell: curl -o /home/admin/calico-crd.yml https://raw.githubusercontent.com/projectcalico/calico/v3.28.0/manifests/custom-resources.yaml
+
+- name: Replacing Calico Pod Network
+  replace: 
+    path: /home/admin/calico-crd.yml
+    regexp: '192\.168\.0\.0\/16'
+    replace: '10.244.0.0/16'  
+      
+- name: Installing Calico CRD
+  shell: kubectl create -f /home/admin/calico-crd.yml
