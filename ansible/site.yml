@@ -34,10 +34,10 @@
   roles:
     - join-workers
 
-# - name: Update Launch Template
-#   hosts: localhost
-#   roles:
-#     - update-launch-template
+- name: Update Launch Template
+  hosts: localhost
+  roles:
+    - update-launch-template
 
 # - name: Setting Up Cluster Components
 #   hosts: control_planes[0]

@@ -12,4 +12,5 @@ output "auto_scaling_group_arn" {
 
 output "launch_template_id"{
   value = aws_launch_template.this.id
+  
 }
