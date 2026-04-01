@@ -330,3 +330,59 @@ variable "network_load_balancer" {
     }
   }
 }
+
+variable "node_termination" {
+  type = object({
+    queue_name                = string
+    role_name                 = string
+    policy_name               = string
+    hook_name                 = string
+    hook_default_result       = string
+    hook_heartbeat_timeout    = number
+    hook_lifecycle_transition = string
+  })
+
+  default = {
+    queue_name                = "NodeTerminationQueue"
+    role_name                 = "nsse-production-node-termination-role"
+    policy_name               = "nsse-production-node-termination-policy"
+    hook_name                 = "NodeTerminationNotification"
+    hook_default_result       = "CONTINUE"
+    hook_heartbeat_timeout    = 300
+    hook_lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
+  }
+}
+
+variable "ecr_repositories" {
+  type = list(object({
+    name                 = string
+    image_tag_mutability = string
+  }))
+
+  default = [
+    {
+      name                 = "nsse/production/health-checker"
+      image_tag_mutability = "MUTABLE"
+    },
+    {
+      name                 = "nsse/production/notificator"
+      image_tag_mutability = "MUTABLE"
+    },
+    {
+      name                 = "nsse/production/order"
+      image_tag_mutability = "MUTABLE"
+    },
+    {
+      name                 = "nsse/production/invoice-generator"
+      image_tag_mutability = "MUTABLE"
+    },
+    {
+      name                 = "nsse/production/identity-server"
+      image_tag_mutability = "MUTABLE"
+    },
+    {
+      name                 = "nsse/production/main"
+      image_tag_mutability = "MUTABLE"
+    }
+  ]
+}

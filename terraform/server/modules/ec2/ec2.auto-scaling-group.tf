@@ -18,6 +18,9 @@ resource "aws_autoscaling_group" "this" {
     max_healthy_percentage = var.auto_scaling_group.instance_maintenance_policy.max_healthy_percentage
   }
 
+  suspended_processes = ["AZRebalance"]
+  force_delete        = true
+
   dynamic "tag" {
     for_each = var.auto_scaling_group.instance_tags
 
