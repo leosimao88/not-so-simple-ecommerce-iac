@@ -49,7 +49,7 @@
     KUBECONFIG: "{{kube_config}}"
   roles:
     - helm
-    #- cloud-controller
+    - cloud-controller
     - node-termination  
     - cluster-autoscaler
     #- argocd
