@@ -39,4 +39,6 @@ module "ec2_control_plane_instances" {
     }
   }
   tags = var.tags
+
+  depends_on = [aws_security_group.control_plane]
 }

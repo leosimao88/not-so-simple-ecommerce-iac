@@ -52,8 +52,8 @@
     - cloud-controller
     - node-termination  
     - cluster-autoscaler
-    #- argocd
-    #- metrics-server
+    - argocd
+    - metrics-server
     #- external-dns
-    #- load-balancer-controller
-    #- container-storage
+    - load-balancer-controller
+    - container-storage

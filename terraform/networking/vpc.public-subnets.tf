@@ -6,5 +6,9 @@ resource "aws_subnet" "public" {
   availability_zone       = var.vpc_resources.public_subnets[count.index].availability_zone
   map_public_ip_on_launch = var.vpc_resources.public_subnets[count.index].map_public_ip_on_launch
 
-  tags = { Name = "${var.vpc_resources.name}-${var.vpc_resources.public_subnets[count.index].name}" }
+  tags = merge({ 
+    Name = "${var.vpc_resources.name}-${var.vpc_resources.public_subnets[count.index].name}",
+    "kubernetes.io/role/elb" = "1"
+     }, var.tags)
+  depends_on = [aws_vpc.this]
 }

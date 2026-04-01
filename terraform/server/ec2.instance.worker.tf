@@ -42,4 +42,6 @@ module "ec2_workers_instances" {
     }
   }
   tags = var.tags
+
+  depends_on = [aws_security_group.worker]
 }
